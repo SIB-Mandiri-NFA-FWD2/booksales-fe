@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import "../styles/navbar.css"; 
 
 export default function Navbar() {
   return (
@@ -8,14 +9,21 @@ export default function Navbar() {
           <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
             <Link to={"/"} className="flex items-center">
               <img
-                src="https://flowbite.com/docs/images/logo.svg"
-                className="mr-3 h-6 sm:h-9"
-                alt="Flowbite Logo"
+                src="https://firebasestorage.googleapis.com/v0/b/sriusnyoba.appspot.com/o/Project%20NF%2FReact%2FLogoGelap.png?alt=media&token=8b1f3cb2-b582-48aa-9773-0c4e458bd55f"
+                className="mr-1 h-6 sm:h-10 block dark:hidden"
+                alt="Logo Terang"
               />
-              <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-                Flowbite
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/sriusnyoba.appspot.com/o/Project%20NF%2FReact%2FlogoFix.png?alt=media&token=4e50fb63-997a-4c09-995f-bfe4fee8cba4"
+                className="mr-1 h-6 sm:h-10 hidden dark:block"
+                alt="Logo Gelap"
+              />
+
+              <span className="self-center text-xl font-semibold whitespace-nowrap text-[#03045E] dark:text-white">
+                Buka Buku
               </span>
             </Link>
+
             <div className="flex items-center lg:order-2">
               <Link
                 to={"login"}
@@ -25,9 +33,9 @@ export default function Navbar() {
               </Link>
               <Link
                 to={"register"}
-                className="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
+                className="text-white bg-[#03045E] hover:bg-[#023E8A] focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
               >
-                Bergabung
+                Daftar
               </Link>
               <button
                 data-collapse-toggle="mobile-menu-2"
@@ -71,8 +79,7 @@ export default function Navbar() {
                 <li>
                   <Link
                     to={"home"}
-                    className="block py-2 pr-4 pl-3 text-white rounded bg-indigo-700 lg:bg-transparent lg:text-indigo-700 lg:p-0 dark:text-white"
-                    aria-current="page"
+                    className="block py-2 pr-4 pl-3 text-white lg:bg-transparent lg:text-[#03045E] lg:p-0 dark:text-white link-underline"
                   >
                     Home
                   </Link>
@@ -80,7 +87,7 @@ export default function Navbar() {
                 <li>
                   <Link
                     to={"books"}
-                    className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-indigo-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                    className="block py-2 pr-4 pl-3 text-gray-700 lg:hover:text-[#03045E] lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700 lg:p-0 dark:text-white link-underline"
                   >
                     Buku Terlaris
                   </Link>
@@ -88,7 +95,7 @@ export default function Navbar() {
                 <li>
                   <Link
                     to={"/"}
-                    className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-indigo-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                    className="block py-2 pr-4 pl-3 text-gray-700 lg:hover:text-[#03045E] lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700 lg:p-0 dark:text-white link-underline"
                   >
                     Blog
                   </Link>
@@ -96,7 +103,7 @@ export default function Navbar() {
                 <li>
                   <Link
                     to={"/"}
-                    className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-indigo-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                    className="block py-2 pr-4 pl-3 text-gray-700 lg:hover:text-[#03045E] lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700 lg:p-0 dark:text-white link-underline"
                   >
                     Layanan
                   </Link>

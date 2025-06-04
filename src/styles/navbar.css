@@ -1,0 +1,24 @@
+.link-underline {
+    position: relative;
+    padding-bottom: 4px;
+    cursor: pointer;
+  }
+  
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #03045E;
+    transition: width 0.3s ease;
+  }
+  
+  .link-underline:hover::after {
+    width: 100%;
+  }
+  
+  .dark .link-underline::after {
+    background-color: white !important;
+  }
