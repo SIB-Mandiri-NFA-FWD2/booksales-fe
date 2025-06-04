@@ -3,44 +3,43 @@ import { useNavigate, useParams } from "react-router-dom";
 import { showGenre, updateGenre } from "../../../_services/genres";
 
 export default function GenreEdit() {
-
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
     description: "",
+    _method: "PUT"
   });
 
-  const navigate = useNavigate();
+  useEffect(() => {
+      const fetchData = async () => {
+        const [genreData] = await Promise.all([
+            showGenre(id)
+        ]);
+        
+        console.log(genreData);
+  
+        setFormData({
+          name: genreData.name,
+          description: genreData.description,
+          _method: "PUT",
+        });
+      };
+      fetchData();
+    }, [id]);
 
-  useEffect(()=>{
-    const fetchData = async () => {
-      const [genresData] = await Promise.all([
-        showGenre(id)
-  ]);
-    
-  console.log(genresData);
-    
-  setFormData({
-    name: genresData.data.name,
-    description: genresData.data.description,
-    _method: "_PUT",
-  });
-  }
-    fetchData()
-  },[id])
-    
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const payload = new FormData();
       for (const key in formData) {
@@ -50,10 +49,10 @@ export default function GenreEdit() {
       await updateGenre(id, payload);
       navigate("/admin/genres");
     } catch (error) {
-      console.log(error);
-      alert("Error update genre");
+      console.error("Error updating genre:", error);
+      alert("Error updating genre");
     }
-  }
+  };
 
   console.log(formData);
 

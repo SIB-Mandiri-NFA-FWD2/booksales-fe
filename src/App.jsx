@@ -15,7 +15,7 @@ import AuthorCreate from './pages/admin/authors/create'
 import BookEdit from './pages/admin/books/update'
 import AuthorEdit from './pages/admin/authors/update'
 import GenreEdit from './pages/admin/genres/update'
-// import ShowBook from './pages/public/books/show'
+import ShowBook from './pages/public/books/show'
 
 function App() {
   return (
@@ -28,7 +28,7 @@ function App() {
 
             <Route path="books">
               <Route index element={<Books />} />
-              {/* <Route path="show/:id" element={<ShowBook />} /> */}
+              <Route path="show/:id" element={<ShowBook />} />
             </Route>
           </Route>
 

@@ -4,12 +4,12 @@ import { getGenres } from "../../../_services/genres";
 import { getAuthors } from "../../../_services/authors";
 import { useNavigate, useParams } from "react-router-dom";
 
+
 export default function BookEdit() {
   const { id } = useParams();
   const [genres, setGenres] = useState([]);
   const [authors, setAuthors] = useState([]);
-
-  const Navigate = useNavigate([]);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -19,75 +19,76 @@ export default function BookEdit() {
     author_id: 0,
     cover_photo: null,
     description: "",
-    _method: "_PUT"
+    _method: "PUT",
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchData = async () => {
-      const [booksData, genresData, authorsData] = await Promise.all([
+      const [bookData, genresData, authorsData] = await Promise.all([
         showBook(id),
         getGenres(),
         getAuthors(),
       ]);
 
-      console.log(booksData)
+      console.log(bookData);
 
-      setGenres(genresData)
-      setAuthors(authorsData)
+      setGenres(genresData);
+      setAuthors(authorsData);
       setFormData({
-        title: booksData.data.title,
-        price: booksData.data.price,
-        stock: booksData.data.stock,
-        genre_id: booksData.data.genre_id,
-        author_id: booksData.data.author_id,
-        cover_photo: booksData.data.cover_photo,
-        description: booksData.data.description,
-        _method: "_PUT",
+        title: bookData.title,
+        price: bookData.price,
+        stock: bookData.stock,
+        genre_id: bookData.genre_id,
+        author_id: bookData.author_id,
+        cover_photo: bookData.cover_photo,
+        description: bookData.description,
+        _method: "PUT",
       });
-    }
+    };
 
-    fetchData()
-  },[id])
+    fetchData();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
-    if (name === "cover_photo"){
+    if (name === "cover_photo") {
       setFormData({
         ...formData,
-        cover_photo: files[0]
+        cover_photo: files[0],
       });
-    } else{
+    } else {
       setFormData({
         ...formData,
-        [name]: value
+        [name]: value,
       });
     }
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       const payload = new FormData();
-      for (const key in formData){
-        if(key === "cover_photo"){
-          if(formData.cover_photo instanceof File){
-            payload.append("cover_photo", formData.cover_photo)
+
+      for (const key in formData) {
+        if (key === "cover_photo") {
+          if (formData.cover_photo instanceof File) {
+            payload.append("cover_photo", formData.cover_photo);
           }
-        } else{
-          payload.append(key, formData[key])
+        } else {
+          payload.append(key, formData[key]);
         }
       }
 
-      await updateBook(id, payload)
-      Navigate("/admin/books")
+      await updateBook(id, payload);
+      navigate("/admin/books");
     } catch (error) {
-      console.log(error)
-      alert("Error update book")
+      console.log(error);
+      alert("Error update book");
     }
   };
-  
+
   return (
     <>
       <section className="bg-white dark:bg-gray-900">

@@ -3,34 +3,33 @@ import { useNavigate, useParams } from "react-router-dom";
 import { showAuthor, updateAuthor } from "../../../_services/authors";
 
 export default function AuthorEdit() {
-
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
     photo: null,
     bio: "",
+    _method: "PUT",
   });
 
-  const navigate = useNavigate();
-
-  useEffect(()=>{
+  useEffect(() => {
     const fetchData = async () => {
       const [authorData] = await Promise.all([
         showAuthor(id)
-  ]);
-      
-  console.log(authorData);
-      
-  setFormData({
-    name: authorData.data.name,
-    bio: authorData.data.bio,
-    photo: authorData.data.photo,
-    _method: "_PUT",
-    });
-  }
-    fetchData()
-  },[id])
+      ]);
+
+      console.log(authorData);
+
+      setFormData({
+        name: authorData.name,
+        bio: authorData.bio,
+        photo: null,
+        _method: "PUT",
+      });
+    };
+    fetchData();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -50,11 +49,13 @@ export default function AuthorEdit() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const payload = new FormData();
+
       for (const key in formData) {
         if (key === "photo") {
-          if (formData.cover_photo instanceof File) {
+          if (formData.photo instanceof File) {
             payload.append("photo", formData.photo);
           }
         } else {
@@ -62,11 +63,11 @@ export default function AuthorEdit() {
         }
       }
 
-      await updateAuthor(payload);
+      await updateAuthor(id, payload);
       navigate("/admin/authors");
     } catch (error) {
       console.log(error);
-      alert("error update authors");
+      alert("Error update authors");
     }
   };
 
@@ -95,7 +96,7 @@ export default function AuthorEdit() {
                   value={formData.name}
                   onChange={handleChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
-                  placeholder="Type name genre"
+                  placeholder="Type name author"
                   required
                 />
               </div>

@@ -27,11 +27,12 @@ export const showBook = async (id) => {
 
 export const updateBook = async (id, data) => {
   try {
-      const response = await API.post(`/books/${id}`, data);
+      const response = await API.post(`/books/${id}`, data)
       return response.data
   } catch (error) {
       console.log(error);
       throw error
+      
   }
 }
 

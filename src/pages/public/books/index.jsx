@@ -3,23 +3,36 @@ import { getBooks } from "../../../_services/books";
 import { getGenres } from "../../../_services/genres";
 import { Link } from "react-router-dom";
 import { bookImageStorage } from "../../../_api";
+import { getAuthors } from "../../../_services/authors";
 
 export default function Books() {
   const [books, setBooks] = useState([]);
-  // const [genres, setGenres] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [authors, setAuthors] = useState([]);
   
   useEffect(() => {
     const fetchData = async () => {
-      const [booksData] = await Promise.all([
+      const [booksData, genresData, authorsData] = await Promise.all([
         getBooks(),
         getGenres(),
+        getAuthors(),
       ]);
-
       setBooks(booksData);
+      setGenres(genresData);
+      setAuthors(authorsData);
     };
 
     fetchData();
   }, []);
+  const getGenre = (id) => {
+    const genre = genres.find((genre) => genre.id === id);
+    return genre ? genre.name : "Unknown genre";
+  };
+
+  const getAuthor = (id) => {
+    const author = authors.find((author) => author.id === id);
+    return author ? author.name : "Unknown author";
+  };
 
   console.log(books);
   
@@ -51,45 +64,44 @@ export default function Books() {
                       {book.title}
                     </Link>
 
-                    <ul className="mt-2 flex items-center gap-4">
-                      <li className="flex items-center gap-2">
+                    <ul className="mt-2 flex items-center gap-2">
+                      <li
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: "#28A745" }}
+                      >
                         <svg
-                          className="h-4 w-4 text-gray-500 dark:text-gray-400"
-                          ariaHidden="true"
                           xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
+                          width="12"
+                          height="12"
+                          fill="white"
+                          className="bi bi-book"
+                          viewBox="0 0 16 16"
                         >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M13 7h6l2 4m-8-4v8m0-8V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v9h2m8 0H9m4 0h2m4 0h2v-4m0 0h-5m3.5 5.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm-10 0a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"
-                          />
+                          <path d="M1 2.828c.885-.37 2.154-.828 4-.828 1.182 0 2.31.2 3 .527V13.5c-.69-.327-1.818-.527-3-.527-1.846 0-3.115.458-4 .828V2.828z" />
+                          <path d="M9 2.527a7.48 7.48 0 0 1 3-.527c1.846 0 3.115.458 4 .828v10.645c-.885-.37-2.154-.828-4-.828-1.182 0-2.31.2-3 .527V2.527z" />
                         </svg>
-                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          Fast Delivery
+                        <p className="text-xs font-medium text-white">
+                          {getGenre(book.genre_id)}
                         </p>
                       </li>
 
-                      <li className="flex items-center gap-2">
+                      <li
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: "#E63946" }}
+                      >
                         <svg
-                          className="h-4 w-4 text-gray-500 dark:text-gray-400"
-                          ariaHidden="true"
                           xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
+                          width="12"
+                          height="12"
+                          fill="white"
+                          className="bi bi-pen"
+                          viewBox="0 0 16 16"
                         >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeWidth="2"
-                            d="M8 7V6c0-.6.4-1 1-1h11c.6 0 1 .4 1 1v7c0 .6-.4 1-1 1h-1M3 18v-7c0-.6.4-1 1-1h11c.6 0 1 .4 1 1v7c0 .6-.4 1-1 1H4a1 1 0 0 1-1-1Zm8-3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
-                          />
+                          <path d="m13.498.795.149-.149a1.207 1.207 0 0 1 1.707 1.707l-.149.149a.5.5 0 0 1-.708 0L13.5 1.207a.5.5 0 0 1 0-.708z" />
+                          <path d="M11.379 2.414 3 10.793V13h2.207l8.379-8.379-2.207-2.207z" />
                         </svg>
-                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          Best Price
+                        <p className="text-xs font-medium text-white">
+                          {getAuthor(book.author_id)}
                         </p>
                       </li>
                     </ul>

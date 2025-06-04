@@ -11,12 +11,10 @@ export default function Navbar() {
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/sriusnyoba.appspot.com/o/Project%20NF%2FReact%2FLogoGelap.png?alt=media&token=8b1f3cb2-b582-48aa-9773-0c4e458bd55f"
                 className="mr-1 h-6 sm:h-10 block dark:hidden"
-                alt="Logo Terang"
               />
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/sriusnyoba.appspot.com/o/Project%20NF%2FReact%2FlogoFix.png?alt=media&token=4e50fb63-997a-4c09-995f-bfe4fee8cba4"
                 className="mr-1 h-6 sm:h-10 hidden dark:block"
-                alt="Logo Gelap"
               />
 
               <span className="self-center text-xl font-semibold whitespace-nowrap text-[#03045E] dark:text-white">

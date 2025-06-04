@@ -1,171 +1,92 @@
-// export default function showBook() {
-//   return (
-
-//     <div className="p-6 bg-white text-gray-800 max-w-7xl mx-auto">
-//       {/* Header Buku */}
-//       <div className="flex flex-col md:flex-row gap-8">
-//         <img
-//           src="/cover-bumi.jpg"
-//           alt="Bumi"
-//           className="w-52 h-auto shadow-lg"
-//         />
-//         <div className="flex-1">
-//           <h1 className="text-3xl font-bold">
-//             Bumi{" "}
-//             <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded ml-2">
-//               Novel
-//             </span>
-//           </h1>
-//           <p className="text-lg font-semibold mt-2">Tere Liye</p>
-
-//           {/* Deskripsi */}
-//           <p className="mt-4 text-sm text-justify">
-//             Novel dengan tebal 440 halaman ini, berkisah mengenai petualangan
-//             Raib...
-//           </p>
-
-//           {/* Detail */}
-//           <div className="grid grid-cols-2 gap-4 mt-6 text-sm">
-//             <div>
-//               <strong>Jumlah Halaman:</strong> 440 Halaman
-//             </div>
-//             <div>
-//               <strong>ISBN:</strong> 978-602-03-3295-6
-//             </div>
-//             <div>
-//               <strong>Penerbit:</strong> Gramedia, 2021
-//             </div>
-//             <div>
-//               <strong>Bahasa:</strong> Indonesia
-//             </div>
-//           </div>
-
-//           {/* Aksi */}
-//           <div className="mt-6 flex items-center gap-4">
-//             <Button>Pinjam Sekarang</Button>
-//             <span className="text-yellow-500 font-bold">★ 5/5</span>
-//             <span className="text-gray-600">Dipinjam 110+</span>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Series Lainnya */}
-//       <div className="mt-12">
-//         <h2 className="text-xl font-semibold mb-4">Series Lainnya</h2>
-//         <div className="flex gap-4 overflow-x-auto">
-//           {["Matahari", "Bulan", "Bintang"].map((judul, i) => (
-//             <div key={i} className="w-36 flex-shrink-0">
-//               <img
-//                 src={`/cover-${judul.toLowerCase()}.jpg`}
-//                 alt={judul}
-//                 className="rounded shadow"
-//               />
-//               <p className="text-sm mt-2 text-center">{judul}</p>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-
-//       {/* Buku Terkait */}
-//       <div className="mt-12">
-//         <h2 className="text-xl font-semibold mb-4">Buku Terkait</h2>
-//         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-//           {[
-//             "Edensor",
-//             "Pergi",
-//             "Langit Biru",
-//             "Lost Souls",
-//             "172 Days",
-//             "Lubuk Hati",
-//           ].map((judul, i) => (
-//             <div key={i} className="text-center">
-//               <img
-//                 src={`/related-${judul.toLowerCase().replace(/ /g, "-")}.jpg`}
-//                 alt={judul}
-//                 className="rounded shadow mx-auto w-28 h-40 object-cover"
-//               />
-//               <p className="text-xs mt-2">{judul}</p>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-import { getBookById } from "../../../_services/books";
-import { getGenreById } from "../../../_services/genres";
-import { getAuthorById } from "../../../_services/authors";
-import { bookImageStorage } from "../../../_api";
-import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { getBooks } from "../../../_services/books";
+import { bookImageStorage } from "../../../_api";
+import { getGenres } from "../../../_services/genres";
+import { getAuthors } from "../../../_services/authors";
 
 export default function ShowBook() {
   const { id } = useParams();
-  const [book, setBook] = useState(null);
-  const [genre, setGenre] = useState(null);
-  const [author, setAuthor] = useState(null);
+  const [books, setBooks] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [authors, setAuthors] = useState([]);
 
   useEffect(() => {
-    const fetchDetail = async () => {
-      try {
-        const bookData = await getBookById(id);
-        setBook(bookData);
-
-        const genreData = await getGenreById(bookData.genre_id);
-        setGenre(genreData);
-
-        const authorData = await getAuthorById(bookData.author_id);
-        setAuthor(authorData);
-      } catch (error) {
-        console.error("Error loading book detail", error);
-      }
+    const fetchData = async () => {
+      const [booksData, genresData, authorsData] = await Promise.all([
+        getBooks(),
+        getGenres(),
+        getAuthors(),
+      ]);
+      setBooks(booksData);
+      setGenres(genresData);
+      setAuthors(authorsData);
     };
 
-    fetchDetail();
+    fetchData();
   }, [id]);
 
+  const getGenre = (id) => {
+    const genre = genres.find((genre) => genre.id === id);
+    return genre ? genre.name : "Unknown genre";
+  };
+
+  const getAuthor = (id) => {
+    const author = authors.find((author) => author.id === id);
+    return author ? author.name : "Unknown author";
+  };
+
+  const book = books.find((b) => b.id === parseInt(id));
   if (!book) return <p>Loading...</p>;
 
   return (
-    <section className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md dark:bg-gray-800 dark:text-white">
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="md:w-1/3">
+    <div className="max-w-screen-xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="lg:col-span-4">
+        <Link
+          to="/books"
+          className="text-[#03045E] text-sm mb-4 inline-block hover:underline"
+        >
+          &lt; Kembali
+        </Link>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <img
             src={`${bookImageStorage}/${book.cover_photo}`}
             alt={book.title}
-            className="rounded-lg object-cover w-full h-auto"
+            className="w-full h-auto rounded shadow-md"
           />
-        </div>
-        <div className="md:w-2/3">
-          <h1 className="text-3xl font-bold mb-4">{book.title}</h1>
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
-            {book.description}
-          </p>
 
-          <p className="mb-2">
-            <span className="font-semibold">Price:</span> Rp.{book.price}
-          </p>
-          <p className="mb-2">
-            <span className="font-semibold">Stock:</span> {book.stock}
-          </p>
-          <p className="mb-2">
-            <span className="font-semibold">Genre:</span>{" "}
-            {genre ? genre.name : "Loading..."}
-          </p>
-          <p className="mb-4">
-            <span className="font-semibold">Author:</span>{" "}
-            {author ? author.name : "Loading..."}
-          </p>
+          <div className="md:col-span-2">
+            <h1 className="text-3xl font-bold mb-2">
+              {book.title}{" "}
+              <span className="text-sm bg-[#03045E] text-white px-2 py-2 rounded-full ml-2">
+                {getGenre(book.genre_id)}
+              </span>
+            </h1>
+            <h2 className="text-lg text-gray-600 mb-4">
+              {getAuthor(book.author_id)}
+            </h2>
+            <p className="text-gray-700 mb-6">Deskripsi: {book.description}</p>
+            <p className="text-gray-500 mb-4">
+              Stok:{" "}
+              <span
+                className={book.stock > 0 ? "text-green-600" : "text-red-600"}
+              >
+                {book.stock > 0 ? book.stock : "Habis"}
+              </span>
+            </p>
 
-          <Link
-            to="/books"
-            className="inline-block mt-4 px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-          >
-            Back to Books
-          </Link>
+            <div className="flex gap-4">
+              <button className="border border-blue-600 text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-full">
+                Tambah ke Keranjang
+              </button>
+              <button className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-full">
+                Beli Sekarang
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
