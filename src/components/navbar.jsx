@@ -1,7 +1,19 @@
-import { Link } from "react-router-dom";
-import "../styles/navbar.css"; 
+import { Link, useNavigate } from "react-router-dom";
+import "../styles/navbar.css";
+import { logout } from "../_services/auth";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("accessToken");
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+  const handleLogout = async () => {
+    if (token) {
+      await logout({ token, userInfo });
+    }
+    navigate("/login");
+  };
+
   return (
     <>
       <header>
@@ -23,18 +35,38 @@ export default function Navbar() {
             </Link>
 
             <div className="flex items-center lg:order-2">
-              <Link
-                to={"login"}
-                className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-              >
-                Masuk
-              </Link>
-              <Link
-                to={"register"}
-                className="text-white bg-[#03045E] hover:bg-[#023E8A] focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
-              >
-                Daftar
-              </Link>
+              {token && userInfo ? (
+                <>
+                  <Link
+                    to={"/"}
+                    className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+                  >
+                    {userInfo.name}
+                  </Link>
+                  <Link
+                    to={"/"}
+                    onClick={handleLogout}
+                    className="text-white bg-[#03045E] hover:bg-[#023E8A] focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
+                  >
+                    Logout
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to={"login"}
+                    className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+                  >
+                    Masuk
+                  </Link>
+                  <Link
+                    to={"register"}
+                    className="text-white bg-[#03045E] hover:bg-[#023E8A] focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800"
+                  >
+                    Daftar
+                  </Link>
+                </>
+              )}
               <button
                 data-collapse-toggle="mobile-menu-2"
                 type="button"
@@ -76,7 +108,7 @@ export default function Navbar() {
               <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                 <li>
                   <Link
-                    to={"home"}
+                    to={"/"}
                     className="block py-2 pr-4 pl-3 text-white lg:bg-transparent lg:text-[#03045E] lg:p-0 dark:text-white link-underline"
                   >
                     Home

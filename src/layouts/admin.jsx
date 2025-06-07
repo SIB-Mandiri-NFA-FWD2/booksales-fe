@@ -1,6 +1,32 @@
-import { Link, Outlet } from "react-router-dom";
+import { Await, Link, Outlet, useNavigate } from "react-router-dom";
+import { logout, useDecodeToken } from "../_services/auth";
+import { useEffect } from "react";
 
 export default function AdminLayout() {
+  const token = localStorage.getItem("accessToken");
+  const decodeData = useDecodeToken(token);
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!token || !decodeData || !decodeData.success){
+      navigate("/login")
+    }
+    
+    const role = userInfo.role
+    if (role !=="admin" || !role){
+      navigate("/")
+    }
+  }, [token, decodeData, navigate])
+
+  const handleLogout = async () => {
+    if (token) {
+      await logout({ token, userInfo });
+      navigate("/login")
+    }
+  }
+  
   return (
     <>
       <div className="antialiased bg-gray-50 dark:bg-gray-900">
@@ -88,18 +114,22 @@ export default function AdminLayout() {
 
               <button
                 type="button"
-                className="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                className="flex items-center gap-2 mx-3 text-sm bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1 md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                 id="user-menu-button"
                 aria-expanded="false"
                 data-dropdown-toggle="dropdown"
               >
                 <span className="sr-only">Open user menu</span>
+                <p className="text-gray-900 dark:text-white font-medium">
+                  {userInfo.name}
+                </p>
                 <img
                   className="w-8 h-8 rounded-full"
                   src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gough.png"
                   alt="user photo"
                 />
               </button>
+
               {/* <!-- Dropdown menu --> */}
               <div
                 className="hidden z-50 my-4 w-56 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 rounded-xl"
@@ -107,10 +137,10 @@ export default function AdminLayout() {
               >
                 <div className="py-3 px-4">
                   <span className="block text-sm font-semibold text-gray-900 dark:text-white">
-                    Neil Sims
+                    {userInfo.role}
                   </span>
                   <span className="block text-sm text-gray-900 truncate dark:text-white">
-                    name@flowbite.com
+                    {userInfo.email}
                   </span>
                 </div>
                 <ul
@@ -119,7 +149,8 @@ export default function AdminLayout() {
                 >
                   <li>
                     <Link
-                      to={"/signout"}
+                      to={""}
+                      onClick={handleLogout}
                       className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >
                       Sign out
