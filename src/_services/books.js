@@ -17,8 +17,8 @@ export const createBook = async (data) => {
 
 export const showBook = async (id) => {
   try {
-    const response = await API.get(`/books/${id}`);
-    return response.data;
+    const { data } = await API.get(`/books/${id}`);
+    return data.data;
   } catch (error) {
     console.log(error);
     throw error;

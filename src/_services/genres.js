@@ -17,8 +17,8 @@ export const createGenre = async (data) => {
 
 export const showGenre = async (id) => {
   try {
-    const response = await API.get(`/genres/${id}`);
-    return response.data;
+    const { data } = await API.get(`/genres/${id}`);
+    return data.data;
   } catch (error) {
     console.log(error);
     throw error;

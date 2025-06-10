@@ -3,38 +3,34 @@ import { deleteGenre, getGenres } from "../../../_services/genres";
 import { Link } from "react-router-dom";
 
 export default function AdminGenres() {
-
   const [genres, setGenres] = useState([]);
 
   const [openDropdown, setOpenDropdown] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchData = async () => {
-      const [genresData] = await Promise.all([
-        getGenres()
-      ]);
-      setGenres(genresData)
-      
-    }
+      const [genresData] = await Promise.all([getGenres()]);
+      setGenres(genresData);
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   const toggleDD = (id) => {
-    setOpenDropdown(openDropdown === id ? null : id)
-  }
+    setOpenDropdown(openDropdown === id ? null : id);
+  };
 
   const handleDelete = async (id) => {
-        const genre = genres.find((b) => b.id === id);
-        const confirmDelete = window.confirm(
-          `Are you sure you want to delete "${genre?.name}"?`
-        );
-    
-        if (confirmDelete) {
-          await deleteGenre(id);
-          setGenres((prevGenres) => prevGenres.filter((genre) => genre.id !== id));
-        }
-      };
+    const genre = genres.find((b) => b.id === id);
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete "${genre?.name}"?`
+    );
+
+    if (confirmDelete) {
+      await deleteGenre(id);
+      setGenres((prevGenres) => prevGenres.filter((genre) => genre.id !== id));
+    }
+  };
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
